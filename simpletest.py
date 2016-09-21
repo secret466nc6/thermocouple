@@ -28,7 +28,7 @@ import time
 
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_MAX31855.MAX31855 as MAX31855
-
+import xlsxwriter
 
 # Define a function to convert celsius to fahrenheit.
 def c_to_f(c):
@@ -44,9 +44,9 @@ def c_to_f(c):
 DO  = 14
 CLK = 15
 CS0  = 12
-CS0  = 16
-CS0  = 20
-CS0  = 21
+CS1  = 16
+CS2  = 20
+CS3  = 21
 sensor0 = MAX31855.MAX31855(CLK, CS0, DO)
 sensor1 = MAX31855.MAX31855(CLK, CS1, DO)
 sensor2 = MAX31855.MAX31855(CLK, CS2, DO)
@@ -66,15 +66,24 @@ sensor3 = MAX31855.MAX31855(CLK, CS3, DO)
 #SPI_PORT   = 1
 #SPI_DEVICE = 0
 #sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
-
+with xlsxwriter.Workbook('hello_world.xlsx') as workbook:
+    worksheet = workbook.add_worksheet()
 # Loop printing measurements every second.
 print('Press Ctrl-C to quit.')
+i = 0
 while True:
     temp0 = sensor0.readTempC()
+    temp1 = sensor1.readTempC()
+    temp2 = sensor2.readTempC()
+    temp3 = sensor3.readTempC()
+    
     #internal = sensor.readInternalC()
     print('(0)Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp0, c_to_f(temp0)))
-    print('(0)Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp1, c_to_f(temp1)))
-    print('(0)Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp2, c_to_f(temp2)))
-    print('(0)Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp3, c_to_f(temp3)))
+    print('(1)Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp1, c_to_f(temp1)))
+    print('(2)Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp2, c_to_f(temp2)))
+    print('(3)Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp3, c_to_f(temp3)))
     #print('    Internal Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(internal, c_to_f(internal)))
-    time.sleep(5.0)
+    worksheet.write(i,0, 'Hello world')
+    i = i + 1
+    time.sleep(1.0)
+
